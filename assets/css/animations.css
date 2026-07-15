@@ -1,0 +1,131 @@
+/* =============================================
+   HG ESTATES — Animations
+   ============================================= */
+
+/* ===== Skeleton Loading ===== */
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== Float ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-18px) rotate(1deg); }
+  66% { transform: translateY(-8px) rotate(-1deg); }
+}
+.float-anim { animation: float 5s ease-in-out infinite; }
+
+/* ===== Blob / Orb ===== */
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: scale(1); }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: scale(1.05); }
+}
+.blob-anim { animation: blob 8s ease-in-out infinite; }
+
+/* ===== Gradient Background Shift ===== */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animated-gradient-bg {
+  background: linear-gradient(120deg, #0A0E14, #10151F, #0A0E14, rgba(0,245,160,0.04), #10151F);
+  background-size: 300% 300%;
+  animation: gradient-shift 12s ease infinite;
+}
+
+/* ===== Marquee ===== */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ===== Preloader ===== */
+#preloader-bar { transition: width 1.3s cubic-bezier(0.4,0,0.2,1); }
+#preloader-bar.fill { width: 100%; }
+#preloader { transition: opacity 0.7s ease, visibility 0.7s ease; }
+#preloader.hide { opacity: 0; visibility: hidden; }
+
+/* ===== Hero Text Reveal ===== */
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(30px) skewY(1deg); }
+  to { opacity: 1; transform: translateY(0) skewY(0); }
+}
+.hero-reveal {
+  animation: heroReveal 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+  opacity: 0;
+}
+.hero-reveal-delay-1 { animation-delay: 0.15s; }
+.hero-reveal-delay-2 { animation-delay: 0.3s; }
+.hero-reveal-delay-3 { animation-delay: 0.45s; }
+.hero-reveal-delay-4 { animation-delay: 0.6s; }
+
+/* ===== Spin Slow ===== */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* ===== Shimmer (for stat cards) ===== */
+@keyframes shimmer {
+  from { transform: translateX(-100%) skewX(-15deg); }
+  to { transform: translateX(200%) skewX(-15deg); }
+}
+.shimmer-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  animation: shimmer 3s infinite;
+}
+
+/* ===== Neon Flicker ===== */
+@keyframes neonFlicker {
+  0%, 100% { text-shadow: 0 0 8px rgba(0,245,160,0.8), 0 0 20px rgba(0,245,160,0.4); }
+  50% { text-shadow: 0 0 4px rgba(0,245,160,0.5), 0 0 10px rgba(0,245,160,0.2); }
+}
+.neon-text { animation: neonFlicker 3s ease-in-out infinite; }
+
+/* ===== Bounce In ===== */
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.bounce-in { animation: bounceIn 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+/* ===== Count Up (triggered by GSAP, these are just defaults) ===== */
+.counter { display: inline-block; }
+
+/* ===== Hover Lift ===== */
+.hover-lift { transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+.hover-lift:hover { transform: translateY(-8px); }
+
+/* ===== Ring Pulse ===== */
+@keyframes ringPulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,245,160,0.4); }
+  70% { box-shadow: 0 0 0 14px rgba(0,245,160,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,245,160,0); }
+}
+.ring-pulse { animation: ringPulse 2s infinite; }
+
+/* ===== Gradient Border Animate ===== */
+@keyframes gradientBorderRotate {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ===== Ticker glow line ===== */
+@keyframes glowLinePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.glow-divider { animation: glowLinePulse 3s ease-in-out infinite; } 

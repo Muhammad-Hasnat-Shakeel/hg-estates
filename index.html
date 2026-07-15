@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HG Estates | Live the Future</title>
+<meta name="description" content="HG Estates — A futuristic real estate platform to find, compare and own your dream property.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          emerald: { DEFAULT: '#00F5A0', dim: '#00c982' },
+          gold: '#D4AF37',
+          dark: { 900: '#0A0E14', 800: '#10151F', 700: '#161C28', 600: '#1F2733' }
+        },
+        fontFamily: { sora: ['Sora','sans-serif'], inter: ['Inter','sans-serif'] },
+        boxShadow: {
+          glow: '0 0 25px rgba(0,245,160,0.35)',
+          'glow-gold': '0 0 25px rgba(212,175,55,0.3)'
+        }
+      }
+    }
+  }
+</script>
+
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/animations.css">
+
+<style>
+/* ── Hero ── */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2000');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  transition: transform 8s ease;
+}
+.hero-bg-img.loaded { transform: scale(1); }
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,14,20,0.78) 0%,
+    rgba(10,14,20,0.55) 40%,
+    rgba(10,14,20,0.88) 80%,
+    rgba(10,14,20,1) 100%
+  );
+}
+
+/* Animated orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.orb-1 {
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(0,245,160,0.10), transparent 70%);
+  top: -80px; left: -80px;
+  animation: blob 10s ease-in-out infinite;
+}
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212,175,55,0.07), transparent 70%);
+  bottom: -120px; right: -120px;
+  animation: blob 14s ease-in-out infinite reverse;
+}
+.orb-3 {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(0,245,160,0.05), transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: blob 8s ease-in-out infinite 2s;
+}
+
+/* Particles */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatParticle linear infinite;
+}
+@keyframes floatParticle {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-100px) scale(1); opacity: 0; }
+}
+
+/* Hero search bar */
+.hero-search-bar {
+  background: rgba(16,21,31,0.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 18px;
+  padding: 6px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,245,160,0.05);
+}
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  transition: background 0.3s ease;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+.search-field:hover { background: rgba(255,255,255,0.04); }
+.search-field select {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  width: 100%;
+  cursor: pointer;
+}
+html.light .search-field select { color: #1e293b; }
+.search-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+html.light .hero-search-bar {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(0,0,0,0.08);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.scroll-mouse {
+  width: 22px; height: 34px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+}
+.scroll-dot {
+  width: 3px; height: 7px;
+  background: #00F5A0;
+  border-radius: 2px;
+  animation: scrollDot 1.6s ease-in-out infinite;
+}
+@keyframes scrollDot {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(7px); opacity: 0.3; }
+}
+
+/* ── Marquee Ticker ── */
+.ticker-wrap {
+  background: rgba(16,21,31,0.7);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0,245,160,0.08);
+  border-bottom: 1px solid rgba(0,245,160,0.08);
+  padding: 10px 0;
+  overflow: hidden;
+}
+html.light .ticker-wrap { background: rgba(240,244,248,0.8); }
+
+/* ── Stats ── */
+.stats-section { position: relative; overflow: hidden; }
+.stats-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,245,160,0.03) 0%, transparent 50%, rgba(212,175,55,0.02) 100%);
+}
+
+/* ── Feature card ── */
+.feature-card {
+  position: relative;
+  background: rgba(16,21,31,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,245,160,0.5), transparent);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.feature-card:hover { transform: translateY(-5px); border-color: rgba(0,245,160,0.2); box-shadow: 0 16px 36px rgba(0,0,0,0.3); }
+.feature-card:hover::before { transform: scaleX(1); }
+.feature-icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: rgba(0,245,160,0.08);
+  border: 1px solid rgba(0,245,160,0.15);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+.feature-card:hover .feature-icon-wrap { background: rgba(0,245,160,0.15); box-shadow: 0 0 18px rgba(0,245,160,0.2); }
+html.light .feature-card { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.07); }
+
+/* ── Agent card ── */
+.agent-card {
+  background: rgba(16,21,31,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+.agent-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00F5A0, #D4AF37);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.agent-card:hover { transform: translateY(-8px); border-color: rgba(0,245,160,0.2); box-shadow: 0 20px 45px rgba(0,0,0,0.3); }
+.agent-card:hover::after { transform: scaleX(1); }
+.agent-avatar-wrap {
+  position: relative;
+  width: 80px; height: 80px;
+  margin: 0 auto 1rem;
+}
+.agent-avatar-wrap img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0,245,160,0.3);
+}
+.agent-status-dot {
+  position: absolute;
+  bottom: 3px; right: 3px;
+  width: 13px; height: 13px;
+  background: #00F5A0;
+  border-radius: 50%;
+  border: 2px solid #10151F;
+  animation: ringPulse 2s infinite;
+}
+html.light .agent-card { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.07); }
+html.light .agent-status-dot { border-color: #fff; }
+
+/* ── Mortgage calculator ── */
+.calc-card {
+  background: rgba(16,21,31,0.7);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 22px;
+  padding: 2.25rem;
+  backdrop-filter: blur(16px);
+}
+html.light .calc-card { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.08); }
+.calc-result-card {
+  background: linear-gradient(135deg, rgba(0,245,160,0.08), rgba(212,175,55,0.04));
+  border: 1px solid rgba(0,245,160,0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+.slider-row { margin-bottom: 1.5rem; }
+.slider-row label { font-size: 0.78rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.slider-row .slider-val { font-family: 'Sora',sans-serif; font-weight: 700; color: #00F5A0; font-size: 0.88rem; }
+
+/* ── Blog card ── */
+.blog-card {
+  background: rgba(16,21,31,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.blog-card:hover { transform: translateY(-7px); border-color: rgba(0,245,160,0.2); box-shadow: 0 18px 36px rgba(0,0,0,0.3); color: inherit; }
+.blog-card .card-img-wrap { height: 195px; overflow: hidden; }
+.blog-card .card-img-wrap img { transition: transform 0.6s ease; width: 100%; height: 100%; object-fit: cover; }
+.blog-card:hover .card-img-wrap img { transform: scale(1.07); }
+html.light .blog-card { background: #fff; border-color: rgba(0,0,0,0.07); }
+
+/* ── Testimonial ── */
+.testimonial-card {
+  background: rgba(16,21,31,0.65);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 22px;
+  padding: 2.5rem;
+  backdrop-filter: blur(16px);
+}
+.quote-icon {
+  font-size: 5rem; line-height: 1;
+  color: rgba(0,245,160,0.12);
+  font-family: Georgia,serif;
+  position: absolute;
+  top: 1.25rem; left: 1.75rem;
+}
+html.light .testimonial-card { background: rgba(255,255,255,0.85); border-color: rgba(0,0,0,0.08); }
+
+/* ── Section line ── */
+.section-line { height: 1px; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent); margin: 0; border: none; }
+
+/* ── CTA Banner ── */
+.cta-banner {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, rgba(0,245,160,0.07) 0%, rgba(16,21,31,0.95) 50%, rgba(212,175,55,0.05) 100%);
+  border: 1px solid rgba(0,245,160,0.12);
+  border-radius: 26px;
+}
+.cta-banner::before {
+  content: '';
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(0,245,160,0.025) 60deg, transparent 120deg);
+  animation: spin-slow 20s linear infinite;
+}
+
+/* ── Recently Viewed ── */
+.recently-viewed-section { display: none; }
+.recently-viewed-section.has-items { display: block; }
+
+/* ── Luxury Home icon — emerald match ── */
+.cat-icon-luxury {
+  background: rgba(0,245,160,0.08) !important;
+  border-color: rgba(0,245,160,0.15) !important;
+}
+.cat-icon-luxury i { color: #00F5A0 !important; }
+</style>
+</head>
+<body class="bg-dark-900 text-white font-inter overflow-x-hidden">
+
+<!-- ============ PRELOADER ============ -->
+<div id="preloader" class="fixed inset-0 z-[999] bg-dark-900 flex items-center justify-center">
+  <div class="text-center">
+    <div class="font-sora text-3xl font-bold tracking-widest mb-1">
+      HG <span class="text-emerald">ESTATES</span>
+    </div>
+    <p class="text-gray-500 text-xs tracking-widest uppercase mb-4">Live the Future</p>
+    <div class="w-36 h-[2px] bg-dark-700 mx-auto overflow-hidden rounded-full">
+      <div id="preloader-bar" class="h-full w-0 bg-emerald rounded-full" style="box-shadow:0 0 10px rgba(0,245,160,0.6)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<nav id="main-navbar" class="fixed top-0 left-0 w-full z-[100] transition-all duration-500 px-6 md:px-12 py-3">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+    <a href="index.html" class="font-sora text-xl font-bold tracking-wide flex items-center gap-2">
+      <span class="w-7 h-7 rounded-lg bg-emerald flex items-center justify-center text-dark-900 text-xs font-black">HG</span>
+      <span>Estates</span>
+    </a>
+
+    <ul class="hidden lg:flex items-center gap-7 font-medium text-sm">
+      <li><a href="index.html" class="nav-link active-link">Home</a></li>
+      <li><a href="properties.html" class="nav-link">Properties</a></li>
+      <li><a href="agents.html" class="nav-link">Agents</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="blog.html" class="nav-link">Blog</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+        <i class="bx bx-moon text-lg"></i>
+      </button>
+      <a href="favorites.html" class="icon-btn relative" title="Saved Properties">
+        <i class="bx bx-heart text-lg"></i>
+        <span id="fav-count" class="absolute -top-1 -right-1 bg-emerald text-dark-900 text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </a>
+      <a href="properties.html" class="hidden md:flex btn-primary text-xs py-2 px-4 items-center gap-1.5">
+        <i class="bx bx-search"></i> Find Property
+      </a>
+      <button id="mobile-menu-btn" class="lg:hidden icon-btn">
+        <i class="bx bx-menu text-xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="lg:hidden hidden mt-3 glass-card rounded-2xl p-5 mx-4">
+    <ul class="flex flex-col gap-3 font-medium text-sm">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="properties.html" class="nav-link">Properties</a></li>
+      <li><a href="agents.html" class="nav-link">Agents</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="blog.html" class="nav-link">Blog</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <a href="properties.html" class="btn-primary w-full text-center block mt-4 text-sm">Find Property</a>
+  </div>
+</nav>
+
+<!-- ============ HERO SECTION ============ -->
+<section class="hero-section">
+  <div class="hero-bg-img" id="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div id="particles-wrap"></div>
+  <div class="absolute inset-0 dot-grid-bg opacity-25 pointer-events-none"></div>
+
+  <div class="relative z-10 w-full max-w-4xl mx-auto text-center px-6 pt-20">
+
+    <div class="hero-reveal flex justify-center">
+      <span class="section-tag text-xs">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse inline-block"></span>
+        Pakistan's #1 Futuristic Real Estate Platform
+      </span>
+    </div>
+
+    <h1 class="font-sora text-4xl sm:text-5xl md:text-6xl font-bold mt-5 leading-[1.12] hero-reveal hero-reveal-delay-1">
+      Find Your <span class="gradient-text">Dream Home</span><br>In Minutes
+    </h1>
+
+    <p class="text-gray-300 mt-4 max-w-xl mx-auto text-sm md:text-base leading-relaxed hero-reveal hero-reveal-delay-2">
+      Handpicked luxury properties across Lahore, Karachi, Islamabad & Dubai — verified agents, smart search, zero hassle.
+    </p>
+
+    <!-- Search Bar -->
+    <div class="hero-search-bar mt-7 max-w-4xl mx-auto hero-reveal hero-reveal-delay-3">
+      <div class="flex flex-col md:flex-row items-stretch gap-2">
+
+        <div class="search-field">
+          <i class="bx bx-map text-emerald text-base flex-shrink-0"></i>
+          <div class="text-left flex-1 min-w-0">
+            <p class="text-gray-500 text-[9px] font-semibold uppercase tracking-wider mb-0.5">Location</p>
+            <select id="search-location" class="block w-full">
+              <option value="">Any City</option>
+              <option>Lahore</option><option>Karachi</option>
+              <option>Islamabad</option><option>Dubai</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="search-divider hidden md:block self-center"></div>
+
+        <div class="search-field">
+          <i class="bx bx-building-house text-emerald text-base flex-shrink-0"></i>
+          <div class="text-left flex-1 min-w-0">
+            <p class="text-gray-500 text-[9px] font-semibold uppercase tracking-wider mb-0.5">Type</p>
+            <select id="search-type" class="block w-full">
+              <option value="">Any Type</option>
+              <option>Apartment</option><option>Villa</option>
+              <option>House</option><option>Office</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="search-divider hidden md:block self-center"></div>
+
+        <div class="search-field">
+          <i class="bx bx-dollar-circle text-emerald text-base flex-shrink-0"></i>
+          <div class="text-left flex-1 min-w-0">
+            <p class="text-gray-500 text-[9px] font-semibold uppercase tracking-wider mb-0.5">Budget</p>
+            <select id="search-budget" class="block w-full">
+              <option value="">Any Budget</option>
+              <option>Under $100k</option><option>$100k - $300k</option>
+              <option>$300k - $600k</option><option>$600k+</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="search-divider hidden md:block self-center"></div>
+
+        <div class="search-field">
+          <i class="bx bx-bed text-emerald text-base flex-shrink-0"></i>
+          <div class="text-left flex-1 min-w-0">
+            <p class="text-gray-500 text-[9px] font-semibold uppercase tracking-wider mb-0.5">Beds</p>
+            <select id="search-beds" class="block w-full">
+              <option value="">Any</option>
+              <option>1</option><option>2</option><option>3</option><option>4+</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="hero-search-btn" class="btn-primary flex items-center justify-center gap-2 text-sm whitespace-nowrap px-6 py-3 md:rounded-xl">
+          <i class="bx bx-search"></i> Search
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Hero Stats -->
+    <div class="flex flex-wrap justify-center gap-6 md:gap-12 mt-10 hero-reveal hero-reveal-delay-4">
+      <div class="text-center">
+        <h3 class="font-sora text-2xl md:text-3xl font-bold text-emerald counter" data-target="10000">0</h3>
+        <p class="text-gray-400 text-xs mt-1">Properties Listed</p>
+      </div>
+      <div class="w-px bg-white/10 hidden md:block self-stretch"></div>
+      <div class="text-center">
+        <h3 class="font-sora text-2xl md:text-3xl font-bold text-emerald counter" data-target="5000">0</h3>
+        <p class="text-gray-400 text-xs mt-1">Happy Clients</p>
+      </div>
+      <div class="w-px bg-white/10 hidden md:block self-stretch"></div>
+      <div class="text-center">
+        <h3 class="font-sora text-2xl md:text-3xl font-bold text-emerald counter" data-target="150">0</h3>
+        <p class="text-gray-400 text-xs mt-1">Expert Agents</p>
+      </div>
+      <div class="w-px bg-white/10 hidden md:block self-stretch"></div>
+      <div class="text-center">
+        <h3 class="font-sora text-2xl md:text-3xl font-bold text-emerald counter" data-target="20">0</h3>
+        <p class="text-gray-400 text-xs mt-1">Cities Covered</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+    <p class="text-gray-500 text-[10px] tracking-widest uppercase">Scroll</p>
+  </div>
+</section>
+
+<!-- ============ MARQUEE TICKER ============ -->
+<div class="ticker-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="text-emerald">★</span> Verified Listings</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> DHA Lahore</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> Luxury Villas</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> Commercial Spaces</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> Smart Investments</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> Dubai Properties</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> 24/7 Agent Support</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> Trusted Since 2018</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> Verified Listings</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> DHA Lahore</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> Luxury Villas</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> Commercial Spaces</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> Smart Investments</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> Dubai Properties</div>
+    <div class="marquee-item"><span class="text-emerald">★</span> 24/7 Agent Support</div>
+    <div class="marquee-item"><span class="text-emerald">◆</span> Trusted Since 2018</div>
+  </div>
+</div>
+
+<!-- ============ PROPERTY CATEGORIES ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <span class="section-tag"><i class="bx bx-category"></i> Browse by Category</span>
+      <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4">Find What <span class="gradient-text">Suits You</span></h2>
+      <p class="text-gray-400 mt-3 max-w-lg mx-auto text-sm">Apartments to luxury villas, commercial towers to private offices — all verified.</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+
+      <a href="properties.html?type=Apartment" class="category-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="cat-icon"><i class="bx bx-building text-xl text-emerald"></i></div>
+        <h4 class="font-sora font-semibold mt-2 text-sm">Apartments</h4>
+        <p class="text-gray-400 text-xs mt-1">1,240 Listings</p>
+      </a>
+
+      <a href="properties.html?type=Villa" class="category-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="cat-icon"><i class="bx bx-home-heart text-xl text-emerald"></i></div>
+        <h4 class="font-sora font-semibold mt-2 text-sm">Villas</h4>
+        <p class="text-gray-400 text-xs mt-1">860 Listings</p>
+      </a>
+
+      <a href="properties.html?type=Commercial" class="category-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="cat-icon"><i class="bx bx-store-alt text-xl text-emerald"></i></div>
+        <h4 class="font-sora font-semibold mt-2 text-sm">Commercial</h4>
+        <p class="text-gray-400 text-xs mt-1">540 Listings</p>
+      </a>
+
+      <a href="properties.html?type=Office" class="category-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="cat-icon"><i class="bx bx-briefcase text-xl text-emerald"></i></div>
+        <h4 class="font-sora font-semibold mt-2 text-sm">Offices</h4>
+        <p class="text-gray-400 text-xs mt-1">320 Listings</p>
+      </a>
+
+      <!-- Luxury Homes — now emerald to match others -->
+      <a href="properties.html?type=Villa" class="category-card col-span-2 md:col-span-1" data-aos="fade-up" data-aos-delay="400">
+        <div class="cat-icon cat-icon-luxury"><i class="bx bx-diamond text-xl"></i></div>
+        <h4 class="font-sora font-semibold mt-2 text-sm">Luxury Homes</h4>
+        <p class="text-gray-400 text-xs mt-1">180 Listings</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ FEATURED PROPERTIES ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4" data-aos="fade-up">
+      <div>
+        <span class="section-tag"><i class="bx bx-star"></i> Featured Listings</span>
+        <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4">Handpicked <span class="gradient-text">Premium</span> Properties</h2>
+        <p class="text-gray-400 mt-2 max-w-lg text-sm">Verified by our team, loved by our clients. Updated every week.</p>
+      </div>
+      <a href="properties.html" class="btn-outline-gold whitespace-nowrap self-start md:self-auto text-sm">View All →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="property-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="card-img-wrap relative" style="height:230px;">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1200" class="w-full h-full object-cover" alt="Skyline Villa">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          <span class="absolute top-3 left-3 bg-emerald text-dark-900 text-xs font-bold px-2.5 py-0.5 rounded-full z-10">For Sale</span>
+          <button class="fav-btn absolute top-3 right-3 z-10" data-id="1"><i class="bx bx-heart text-sm"></i></button>
+          <div class="absolute bottom-3 left-3 z-10"><p class="font-sora text-lg font-bold text-white drop-shadow-lg">$450,000</p></div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-sora font-semibold text-sm leading-snug mb-1">Skyline Villa, DHA</h3>
+          <p class="text-gray-400 text-xs flex items-center gap-1.5 mb-3"><i class="bx bx-map text-emerald flex-shrink-0"></i><span class="truncate">DHA Phase 6, Lahore</span></p>
+          <div class="property-info-row">
+            <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">4</span><span class="info-label">Beds</span></div>
+            <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">3</span><span class="info-label">Baths</span></div>
+            <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">3,200</span><span class="info-label">Sqft</span></div>
+            <div class="property-info-item"><i class="bx bx-sofa"></i><span class="info-value" style="font-size:.65rem">Furnished</span><span class="info-label">Status</span></div>
+          </div>
+          <a href="property-details.html?id=1" class="btn-primary w-full text-center block mt-4 text-xs py-2.5">View Details</a>
+        </div>
+      </div>
+
+      <div class="property-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-img-wrap relative" style="height:230px;">
+          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1200" class="w-full h-full object-cover" alt="Grand Heights">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          <span class="absolute top-3 left-3 bg-gold text-dark-900 text-xs font-bold px-2.5 py-0.5 rounded-full z-10">For Rent</span>
+          <button class="fav-btn absolute top-3 right-3 z-10" data-id="2"><i class="bx bx-heart text-sm"></i></button>
+          <div class="absolute bottom-3 left-3 z-10"><p class="font-sora text-lg font-bold text-white drop-shadow-lg">$2,200/mo</p></div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-sora font-semibold text-sm leading-snug mb-1">The Grand Heights</h3>
+          <p class="text-gray-400 text-xs flex items-center gap-1.5 mb-3"><i class="bx bx-map text-emerald flex-shrink-0"></i><span class="truncate">Clifton Block 5, Karachi</span></p>
+          <div class="property-info-row">
+            <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">3</span><span class="info-label">Beds</span></div>
+            <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">2</span><span class="info-label">Baths</span></div>
+            <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">1,800</span><span class="info-label">Sqft</span></div>
+            <div class="property-info-item"><i class="bx bx-sofa"></i><span class="info-value" style="font-size:.65rem">Furnished</span><span class="info-label">Status</span></div>
+          </div>
+          <a href="property-details.html?id=2" class="btn-primary w-full text-center block mt-4 text-xs py-2.5">View Details</a>
+        </div>
+      </div>
+
+      <div class="property-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-img-wrap relative" style="height:230px;">
+          <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1200" class="w-full h-full object-cover" alt="Aurora Penthouse">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          <span class="absolute top-3 left-3 bg-emerald text-dark-900 text-xs font-bold px-2.5 py-0.5 rounded-full z-10">For Sale</span>
+          <button class="fav-btn absolute top-3 right-3 z-10" data-id="3"><i class="bx bx-heart text-sm"></i></button>
+          <div class="absolute bottom-3 left-3 z-10"><p class="font-sora text-lg font-bold text-white drop-shadow-lg">$890,000</p></div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-sora font-semibold text-sm leading-snug mb-1">Aurora Penthouse</h3>
+          <p class="text-gray-400 text-xs flex items-center gap-1.5 mb-3"><i class="bx bx-map text-emerald flex-shrink-0"></i><span class="truncate">F-7, Islamabad</span></p>
+          <div class="property-info-row">
+            <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">5</span><span class="info-label">Beds</span></div>
+            <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">4</span><span class="info-label">Baths</span></div>
+            <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">4,500</span><span class="info-label">Sqft</span></div>
+            <div class="property-info-item"><i class="bx bx-sofa"></i><span class="info-value" style="font-size:.65rem">Furnished</span><span class="info-label">Status</span></div>
+          </div>
+          <a href="property-details.html?id=3" class="btn-primary w-full text-center block mt-4 text-xs py-2.5">View Details</a>
+        </div>
+      </div>
+
+      <div class="property-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="card-img-wrap relative" style="height:230px;">
+          <img src="https://images.unsplash.com/photo-1592595896616-c37162298647?q=80&w=1200" class="w-full h-full object-cover" alt="Maple Residency">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          <span class="absolute top-3 left-3 bg-emerald text-dark-900 text-xs font-bold px-2.5 py-0.5 rounded-full z-10">For Sale</span>
+          <button class="fav-btn absolute top-3 right-3 z-10" data-id="4"><i class="bx bx-heart text-sm"></i></button>
+          <div class="absolute bottom-3 left-3 z-10"><p class="font-sora text-lg font-bold text-white drop-shadow-lg">$320,000</p></div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-sora font-semibold text-sm leading-snug mb-1">Maple Residency</h3>
+          <p class="text-gray-400 text-xs flex items-center gap-1.5 mb-3"><i class="bx bx-map text-emerald flex-shrink-0"></i><span class="truncate">Johar Town, Lahore</span></p>
+          <div class="property-info-row">
+            <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">3</span><span class="info-label">Beds</span></div>
+            <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">2</span><span class="info-label">Baths</span></div>
+            <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">2,100</span><span class="info-label">Sqft</span></div>
+            <div class="property-info-item"><i class="bx bx-sofa"></i><span class="info-value" style="font-size:.65rem">Unfurnished</span><span class="info-label">Status</span></div>
+          </div>
+          <a href="property-details.html?id=4" class="btn-primary w-full text-center block mt-4 text-xs py-2.5">View Details</a>
+        </div>
+      </div>
+
+      <div class="property-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-img-wrap relative" style="height:230px;">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200" class="w-full h-full object-cover" alt="Vertex Tower">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          <span class="absolute top-3 left-3 bg-gold text-dark-900 text-xs font-bold px-2.5 py-0.5 rounded-full z-10">For Rent</span>
+          <button class="fav-btn absolute top-3 right-3 z-10" data-id="5"><i class="bx bx-heart text-sm"></i></button>
+          <div class="absolute bottom-3 left-3 z-10"><p class="font-sora text-lg font-bold text-white drop-shadow-lg">$4,500/mo</p></div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-sora font-semibold text-sm leading-snug mb-1">Vertex Business Tower</h3>
+          <p class="text-gray-400 text-xs flex items-center gap-1.5 mb-3"><i class="bx bx-map text-emerald flex-shrink-0"></i><span class="truncate">Business Bay, Dubai</span></p>
+          <div class="property-info-row">
+            <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">—</span><span class="info-label">Open</span></div>
+            <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">4</span><span class="info-label">Baths</span></div>
+            <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">6,000</span><span class="info-label">Sqft</span></div>
+            <div class="property-info-item"><i class="bx bx-sofa"></i><span class="info-value" style="font-size:.65rem">Unfurnished</span><span class="info-label">Status</span></div>
+          </div>
+          <a href="property-details.html?id=5" class="btn-primary w-full text-center block mt-4 text-xs py-2.5">View Details</a>
+        </div>
+      </div>
+
+      <div class="property-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-img-wrap relative" style="height:230px;">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200" class="w-full h-full object-cover" alt="Orchid Villa">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+          <span class="absolute top-3 left-3 bg-emerald text-dark-900 text-xs font-bold px-2.5 py-0.5 rounded-full z-10">For Sale</span>
+          <button class="fav-btn absolute top-3 right-3 z-10" data-id="6"><i class="bx bx-heart text-sm"></i></button>
+          <div class="absolute bottom-3 left-3 z-10"><p class="font-sora text-lg font-bold text-white drop-shadow-lg">$1,250,000</p></div>
+        </div>
+        <div class="p-4">
+          <h3 class="font-sora font-semibold text-sm leading-snug mb-1">Orchid Luxury Villa</h3>
+          <p class="text-gray-400 text-xs flex items-center gap-1.5 mb-3"><i class="bx bx-map text-emerald flex-shrink-0"></i><span class="truncate">Bani Gala, Islamabad</span></p>
+          <div class="property-info-row">
+            <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">6</span><span class="info-label">Beds</span></div>
+            <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">5</span><span class="info-label">Baths</span></div>
+            <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">5,800</span><span class="info-label">Sqft</span></div>
+            <div class="property-info-item"><i class="bx bx-sofa"></i><span class="info-value" style="font-size:.65rem">Furnished</span><span class="info-label">Status</span></div>
+          </div>
+          <a href="property-details.html?id=6" class="btn-primary w-full text-center block mt-4 text-xs py-2.5">View Details</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ WHY CHOOSE US ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+
+    <div data-aos="fade-right">
+      <span class="section-tag"><i class="bx bx-shield-check"></i> Why Choose Us</span>
+      <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4 leading-tight">
+        Built On Trust,<br><span class="gradient-text">Powered By Tech</span>
+      </h2>
+      <p class="text-gray-400 mt-4 max-w-lg leading-relaxed text-sm">
+        Verified listings, licensed agents and smart tools — every decision backed by confidence, not guesswork.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8">
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bx bx-badge-check text-emerald text-lg"></i></div>
+          <h4 class="font-sora font-semibold text-sm">Verified Listings</h4>
+          <p class="text-gray-400 text-xs mt-1.5">Every property inspected before going live.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bx bx-user-voice text-emerald text-lg"></i></div>
+          <h4 class="font-sora font-semibold text-sm">Trusted Agents</h4>
+          <p class="text-gray-400 text-xs mt-1.5">Licensed professionals who know your market.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bx bx-lock-alt text-emerald text-lg"></i></div>
+          <h4 class="font-sora font-semibold text-sm">Secure Transactions</h4>
+          <p class="text-gray-400 text-xs mt-1.5">End-to-end transparency with legal support.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap"><i class="bx bx-headphone text-emerald text-lg"></i></div>
+          <h4 class="font-sora font-semibold text-sm">24/7 Support</h4>
+          <p class="text-gray-400 text-xs mt-1.5">Our team always on call to guide you.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative" data-aos="fade-left">
+      <img src="https://images.unsplash.com/photo-1556020685-ae41abfc9365?q=80&w=1200" class="rounded-3xl w-full h-[460px] object-cover" alt="Real estate agent">
+      <div class="absolute inset-0 rounded-3xl bg-gradient-to-t from-dark-900/40 to-transparent"></div>
+      <div class="absolute -bottom-6 -left-6 glass-card rounded-2xl p-4 pulse-glow flex items-center gap-3 z-10">
+        <div class="w-10 h-10 rounded-xl bg-emerald/10 border border-emerald/30 flex items-center justify-center">
+          <i class="bx bx-trending-up text-xl text-emerald"></i>
+        </div>
+        <div>
+          <h4 class="font-sora font-bold text-lg">98%</h4>
+          <p class="text-gray-400 text-xs">Client Satisfaction</p>
+        </div>
+      </div>
+      <div class="absolute -top-5 -right-5 glass-card rounded-2xl p-4 flex items-center gap-3 z-10">
+        <div class="w-10 h-10 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-center">
+          <i class="bx bx-trophy text-xl text-gold"></i>
+        </div>
+        <div>
+          <h4 class="font-sora font-bold text-lg">#1</h4>
+          <p class="text-gray-400 text-xs">Rated 2026</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ STATISTICS ============ -->
+<section class="py-16 px-6 md:px-12 stats-section animated-gradient-bg">
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-0 glass-card rounded-3xl overflow-hidden">
+      <div class="stat-card shimmer-wrap" data-aos="zoom-in" data-aos-delay="0">
+        <div class="w-12 h-12 rounded-2xl bg-emerald/10 border border-emerald/20 flex items-center justify-center mx-auto mb-3">
+          <i class="bx bx-buildings text-xl text-emerald"></i>
+        </div>
+        <h3 class="font-sora text-3xl font-bold counter" data-target="10000">0</h3>
+        <p class="text-xs uppercase tracking-widest text-gray-400 mt-1.5 font-semibold">Properties</p>
+      </div>
+      <div class="stat-card shimmer-wrap" data-aos="zoom-in" data-aos-delay="100">
+        <div class="w-12 h-12 rounded-2xl bg-emerald/10 border border-emerald/20 flex items-center justify-center mx-auto mb-3">
+          <i class="bx bx-smile text-xl text-emerald"></i>
+        </div>
+        <h3 class="font-sora text-3xl font-bold counter" data-target="5000">0</h3>
+        <p class="text-xs uppercase tracking-widest text-gray-400 mt-1.5 font-semibold">Happy Clients</p>
+      </div>
+      <div class="stat-card shimmer-wrap" data-aos="zoom-in" data-aos-delay="200">
+        <div class="w-12 h-12 rounded-2xl bg-emerald/10 border border-emerald/20 flex items-center justify-center mx-auto mb-3">
+          <i class="bx bx-id-card text-xl text-emerald"></i>
+        </div>
+        <h3 class="font-sora text-3xl font-bold counter" data-target="150">0</h3>
+        <p class="text-xs uppercase tracking-widest text-gray-400 mt-1.5 font-semibold">Expert Agents</p>
+      </div>
+      <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+        <div class="w-12 h-12 rounded-2xl bg-emerald/10 border border-emerald/20 flex items-center justify-center mx-auto mb-3">
+          <i class="bx bx-map-pin text-xl text-emerald"></i>
+        </div>
+        <h3 class="font-sora text-3xl font-bold counter" data-target="20">0</h3>
+        <p class="text-xs uppercase tracking-widest text-gray-400 mt-1.5 font-semibold">Cities</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ FEATURED AGENTS ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <span class="section-tag"><i class="bx bx-id-card"></i> Meet The Team</span>
+      <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4">Our Top <span class="gradient-text">Agents</span></h2>
+      <p class="text-gray-400 mt-2 max-w-lg mx-auto text-sm">Meet the professionals behind thousands of successful property deals.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+      <div class="agent-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="agent-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400" alt="Hasnat Ali">
+          <div class="agent-status-dot"></div>
+        </div>
+        <h4 class="font-sora font-semibold text-sm">Hasnat Ali</h4>
+        <p class="text-emerald text-xs mt-1 font-medium">Senior Property Consultant</p>
+        <div class="flex justify-center gap-5 mt-3 text-xs">
+          <div><p class="font-sora font-bold">8+</p><p class="text-gray-500">Yrs</p></div>
+          <div><p class="font-sora font-bold">320</p><p class="text-gray-500">Sold</p></div>
+          <div><p class="font-sora font-bold">4.9★</p><p class="text-gray-500">Rating</p></div>
+        </div>
+        <a href="agents.html" class="btn-outline-gold w-full mt-4 text-xs block py-2">View Profile</a>
+      </div>
+
+      <div class="agent-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="agent-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400" alt="Sara Khan">
+          <div class="agent-status-dot"></div>
+        </div>
+        <h4 class="font-sora font-semibold text-sm">Sara Khan</h4>
+        <p class="text-emerald text-xs mt-1 font-medium">Luxury Homes Specialist</p>
+        <div class="flex justify-center gap-5 mt-3 text-xs">
+          <div><p class="font-sora font-bold">6+</p><p class="text-gray-500">Yrs</p></div>
+          <div><p class="font-sora font-bold">210</p><p class="text-gray-500">Sold</p></div>
+          <div><p class="font-sora font-bold">4.8★</p><p class="text-gray-500">Rating</p></div>
+        </div>
+        <a href="agents.html" class="btn-outline-gold w-full mt-4 text-xs block py-2">View Profile</a>
+      </div>
+
+      <div class="agent-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="agent-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=400" alt="Bilal Gujjar">
+          <div class="agent-status-dot"></div>
+        </div>
+        <h4 class="font-sora font-semibold text-sm">Bilal Gujjar</h4>
+        <p class="text-emerald text-xs mt-1 font-medium">Commercial Real Estate</p>
+        <div class="flex justify-center gap-5 mt-3 text-xs">
+          <div><p class="font-sora font-bold">10+</p><p class="text-gray-500">Yrs</p></div>
+          <div><p class="font-sora font-bold">480</p><p class="text-gray-500">Sold</p></div>
+          <div><p class="font-sora font-bold">5.0★</p><p class="text-gray-500">Rating</p></div>
+        </div>
+        <a href="agents.html" class="btn-outline-gold w-full mt-4 text-xs block py-2">View Profile</a>
+      </div>
+
+      <div class="agent-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="agent-avatar-wrap">
+          <img src="https://images.unsplash.com/photo-1611432579402-7037e3e2c1e4?q=80&w=400" alt="Ayesha Malik">
+          <div class="agent-status-dot"></div>
+        </div>
+        <h4 class="font-sora font-semibold text-sm">Ayesha Malik</h4>
+        <p class="text-emerald text-xs mt-1 font-medium">Rental Properties Expert</p>
+        <div class="flex justify-center gap-5 mt-3 text-xs">
+          <div><p class="font-sora font-bold">5+</p><p class="text-gray-500">Yrs</p></div>
+          <div><p class="font-sora font-bold">175</p><p class="text-gray-500">Sold</p></div>
+          <div><p class="font-sora font-bold">4.7★</p><p class="text-gray-500">Rating</p></div>
+        </div>
+        <a href="agents.html" class="btn-outline-gold w-full mt-4 text-xs block py-2">View Profile</a>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-10" data-aos="fade-up">
+      <a href="agents.html" class="btn-primary text-sm">Meet All Agents</a>
+    </div>
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <span class="section-tag"><i class="bx bx-message-rounded-dots"></i> Client Stories</span>
+      <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4">What Our <span class="gradient-text">Clients Say</span></h2>
+    </div>
+
+    <div class="testimonial-card relative" data-aos="zoom-in">
+      <div class="quote-icon">"</div>
+      <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+
+          <div class="carousel-item active text-center">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200" class="w-16 h-16 rounded-full object-cover mx-auto border-2 border-emerald/40" alt="Ahmed Raza">
+            <div class="flex justify-center gap-1 mt-4 text-gold">
+              <i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i>
+            </div>
+            <p class="text-gray-300 mt-4 italic max-w-xl mx-auto leading-relaxed text-sm">
+              "HG Estates made finding our first home incredibly smooth. The process felt transparent from start to finish."
+            </p>
+            <h4 class="font-sora font-semibold mt-5 text-sm">Ahmed Raza</h4>
+            <p class="text-gray-500 text-xs">Homeowner, Lahore</p>
+          </div>
+
+          <div class="carousel-item text-center">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200" class="w-16 h-16 rounded-full object-cover mx-auto border-2 border-emerald/40" alt="Fatima Noor">
+            <div class="flex justify-center gap-1 mt-4 text-gold">
+              <i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i>
+            </div>
+            <p class="text-gray-300 mt-4 italic max-w-xl mx-auto leading-relaxed text-sm">
+              "The mortgage calculator saved me so much time before even talking to an agent. Everything feels modern and well thought out."
+            </p>
+            <h4 class="font-sora font-semibold mt-5 text-sm">Fatima Noor</h4>
+            <p class="text-gray-500 text-xs">Investor, Karachi</p>
+          </div>
+
+          <div class="carousel-item text-center">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200" class="w-16 h-16 rounded-full object-cover mx-auto border-2 border-emerald/40" alt="Usman Tariq">
+            <div class="flex justify-center gap-1 mt-4 text-gold">
+              <i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bx-star"></i>
+            </div>
+            <p class="text-gray-300 mt-4 italic max-w-xl mx-auto leading-relaxed text-sm">
+              "Renting our office through HG Estates was effortless. Verified listings meant no surprises at all."
+            </p>
+            <h4 class="font-sora font-semibold mt-5 text-sm">Usman Tariq</h4>
+            <p class="text-gray-500 text-xs">Business Owner, Islamabad</p>
+          </div>
+
+        </div>
+        <div class="flex justify-center gap-3 mt-8">
+          <button class="icon-btn" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+            <i class="bx bx-chevron-left text-lg"></i>
+          </button>
+          <div class="flex gap-2 items-center">
+            <span class="carousel-indicators-custom w-2 h-2 rounded-full bg-emerald"></span>
+            <span class="carousel-indicators-custom w-2 h-2 rounded-full bg-white/20"></span>
+            <span class="carousel-indicators-custom w-2 h-2 rounded-full bg-white/20"></span>
+          </div>
+          <button class="icon-btn" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+            <i class="bx bx-chevron-right text-lg"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ MORTGAGE CALCULATOR ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+
+    <div data-aos="fade-right">
+      <span class="section-tag"><i class="bx bx-calculator"></i> Plan Your Budget</span>
+      <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4 leading-tight">
+        Mortgage <span class="gradient-text">Calculator</span>
+      </h2>
+      <p class="text-gray-400 mt-4 max-w-md leading-relaxed text-sm">
+        Estimate monthly payments in real time. Adjust values and see results instantly — no signup needed.
+      </p>
+
+      <div class="calc-result-card mt-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-gray-400 text-xs font-semibold uppercase tracking-wider">Monthly Payment</span>
+          <i class="bx bx-trending-up text-emerald"></i>
+        </div>
+        <h3 class="font-sora text-4xl font-bold text-emerald" id="monthly-payment-result">$0</h3>
+        <p class="text-gray-500 text-xs mt-2">Principal + interest. Taxes & insurance excluded.</p>
+        <div class="flex gap-5 mt-4 text-xs">
+          <div><p class="text-gray-400 uppercase tracking-wider">Loan Amount</p><p id="calc-loan-amount" class="font-sora font-bold mt-0.5">$240,000</p></div>
+          <div><p class="text-gray-400 uppercase tracking-wider">Total Interest</p><p id="calc-total-interest" class="font-sora font-bold mt-0.5 text-gold">$0</p></div>
+          <div><p class="text-gray-400 uppercase tracking-wider">Total Cost</p><p id="calc-total-cost" class="font-sora font-bold mt-0.5">$0</p></div>
+        </div>
+      </div>
+
+      <a href="properties.html" class="btn-primary inline-flex items-center gap-2 mt-7 text-sm">
+        <i class="bx bx-search"></i> Browse Properties
+      </a>
+    </div>
+
+    <div class="calc-card" data-aos="fade-left">
+      <div class="slider-row">
+        <div class="flex justify-between items-center mb-2">
+          <label>Property Price</label>
+          <span id="property-price-value" class="slider-val">$300,000</span>
+        </div>
+        <input type="range" id="property-price" min="50000" max="2000000" step="5000" value="300000" class="w-full">
+      </div>
+      <div class="slider-row">
+        <div class="flex justify-between items-center mb-2">
+          <label>Down Payment</label>
+          <span id="down-payment-value" class="slider-val">$60,000</span>
+        </div>
+        <input type="range" id="down-payment" min="0" max="1000000" step="5000" value="60000" class="w-full">
+      </div>
+      <div class="slider-row">
+        <div class="flex justify-between items-center mb-2">
+          <label>Interest Rate</label>
+          <span id="interest-rate-value" class="slider-val">5.5%</span>
+        </div>
+        <input type="range" id="interest-rate" min="1" max="15" step="0.1" value="5.5" class="w-full">
+      </div>
+      <div class="slider-row" style="margin-bottom:0">
+        <div class="flex justify-between items-center mb-2">
+          <label>Loan Duration</label>
+          <span id="loan-duration-value" class="slider-val">20 Years</span>
+        </div>
+        <input type="range" id="loan-duration" min="5" max="35" step="1" value="20" class="w-full">
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ BLOG PREVIEW ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4" data-aos="fade-up">
+      <div>
+        <span class="section-tag"><i class="bx bx-news"></i> From The Blog</span>
+        <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4">Insights & <span class="gradient-text">Market Trends</span></h2>
+        <p class="text-gray-400 mt-2 max-w-lg text-sm">Expert advice, investment guides and the latest real estate news.</p>
+      </div>
+      <a href="blog.html" class="btn-outline-gold whitespace-nowrap self-start md:self-auto text-sm">All Articles →</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <a href="blog.html" class="blog-card" data-aos="fade-up" data-aos-delay="0">
+        <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1200" alt="Buying tips"></div>
+        <div class="p-5">
+          <span class="text-emerald text-xs font-bold uppercase tracking-wider">Buying Tips</span>
+          <h4 class="font-sora font-semibold mt-2 text-sm leading-snug">5 Things To Check Before Buying A Home</h4>
+          <p class="text-gray-400 text-xs mt-2">A practical checklist every first-time buyer should run through.</p>
+          <p class="text-gray-500 text-xs mt-3 flex items-center gap-1.5"><i class="bx bx-calendar"></i> Jun 12, 2026 · 5 min read</p>
+        </div>
+      </a>
+      <a href="blog.html" class="blog-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200" alt="Investment"></div>
+        <div class="p-5">
+          <span class="text-gold text-xs font-bold uppercase tracking-wider">Investment</span>
+          <h4 class="font-sora font-semibold mt-2 text-sm leading-snug">Is 2026 The Right Year To Invest?</h4>
+          <p class="text-gray-400 text-xs mt-2">Breaking down the numbers behind this year's property market.</p>
+          <p class="text-gray-500 text-xs mt-3 flex items-center gap-1.5"><i class="bx bx-calendar"></i> Jun 8, 2026 · 7 min read</p>
+        </div>
+      </a>
+      <a href="blog.html" class="blog-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?q=80&w=1200" alt="Smart homes"></div>
+        <div class="p-5">
+          <span class="text-emerald text-xs font-bold uppercase tracking-wider">Market Trends</span>
+          <h4 class="font-sora font-semibold mt-2 text-sm leading-snug">Smart Homes Are Reshaping Buyer Demand</h4>
+          <p class="text-gray-400 text-xs mt-2">Why tech-integrated properties are selling faster in 2026.</p>
+          <p class="text-gray-500 text-xs mt-3 flex items-center gap-1.5"><i class="bx bx-calendar"></i> Jun 2, 2026 · 4 min read</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="section-line">
+
+<!-- ============ RECENTLY VIEWED ============ -->
+<section class="py-16 px-6 md:px-12 recently-viewed-section" id="recently-viewed-section">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center justify-between mb-8" data-aos="fade-up">
+      <div>
+        <span class="section-tag"><i class="bx bx-history"></i> Your Activity</span>
+        <h2 class="font-sora text-2xl md:text-3xl font-bold mt-3">Recently <span class="gradient-text">Viewed</span></h2>
+      </div>
+    </div>
+    <div id="recently-viewed-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="py-20 px-6 md:px-12">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+
+    <div data-aos="fade-right">
+      <span class="section-tag"><i class="bx bx-envelope"></i> Get In Touch</span>
+      <h2 class="font-sora text-3xl md:text-4xl font-bold mt-4 leading-tight">
+        Let's Find Your <span class="gradient-text">Next Home</span>
+      </h2>
+      <p class="text-gray-400 mt-4 max-w-md leading-relaxed text-sm">Have a question or want a consultation? Our team responds within 24 hours.</p>
+
+      <div class="space-y-3 mt-8">
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3 hover:-translate-y-1 transition-all duration-300">
+          <div class="w-10 h-10 rounded-xl bg-emerald/10 border border-emerald/25 flex items-center justify-center flex-shrink-0">
+            <i class="bx bx-map text-emerald"></i>
+          </div>
+          <div>
+            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold">Office Address</p>
+            <p class="font-medium text-sm mt-0.5">123 Skyline Avenue, Gulberg III, Lahore</p>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3 hover:-translate-y-1 transition-all duration-300">
+          <div class="w-10 h-10 rounded-xl bg-emerald/10 border border-emerald/25 flex items-center justify-center flex-shrink-0">
+            <i class="bx bx-phone text-emerald"></i>
+          </div>
+          <div>
+            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold">Phone</p>
+            <p class="font-medium text-sm mt-0.5">+92 300 1234567</p>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-4 flex items-center gap-3 hover:-translate-y-1 transition-all duration-300">
+          <div class="w-10 h-10 rounded-xl bg-emerald/10 border border-emerald/25 flex items-center justify-center flex-shrink-0">
+            <i class="bx bx-envelope text-emerald"></i>
+          </div>
+          <div>
+            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold">Email</p>
+            <p class="font-medium text-sm mt-0.5">hello@hgestates.com</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-2xl overflow-hidden mt-6 h-48 border border-white/08">
+        <iframe src="https://www.google.com/maps?q=Lahore&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="grayscale invert contrast-125"></iframe>
+      </div>
+    </div>
+
+    <form class="glass-card rounded-3xl p-7 md:p-9" data-aos="fade-left" id="contact-form">
+      <h3 class="font-sora text-xl font-bold mb-6">Send Us A Message</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1.5 block">Full Name</label>
+          <input type="text" required class="w-full bg-dark-700/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-emerald transition-colors text-sm" placeholder="John Doe">
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1.5 block">Email</label>
+          <input type="email" required class="w-full bg-dark-700/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-emerald transition-colors text-sm" placeholder="john@email.com">
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1.5 block">Phone</label>
+        <input type="tel" class="w-full bg-dark-700/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-emerald transition-colors text-sm" placeholder="+92 300 0000000">
+      </div>
+      <div class="mt-4">
+        <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1.5 block">I'm Looking To</label>
+        <select class="w-full bg-dark-700/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-emerald transition-colors text-sm">
+          <option>Buy a Property</option>
+          <option>Rent a Property</option>
+          <option>Sell a Property</option>
+          <option>General Inquiry</option>
+        </select>
+      </div>
+      <div class="mt-4">
+        <label class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1.5 block">Message</label>
+        <textarea rows="4" required class="w-full bg-dark-700/50 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-emerald transition-colors resize-none text-sm" placeholder="Tell us what you're looking for..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary w-full mt-5 flex items-center justify-center gap-2 text-sm">
+        <i class="bx bx-send"></i> Send Message
+      </button>
+      <p id="contact-success-msg" class="hidden text-emerald text-xs mt-3 text-center">
+        <i class="bx bx-check-circle"></i> Message sent! We'll get back to you soon.
+      </p>
+    </form>
+
+  </div>
+</section>
+
+<!-- ============ CTA BANNER ============ -->
+<section class="py-10 px-6 md:px-12 mb-8">
+  <div class="max-w-5xl mx-auto cta-banner px-8 md:px-14 py-14 text-center" data-aos="zoom-in">
+    <span class="section-tag mx-auto"><i class="bx bx-rocket"></i> Get Started Today</span>
+    <h2 class="font-sora text-2xl md:text-3xl font-bold mt-5">Ready To Find Your <span class="gradient-text">Dream Property?</span></h2>
+    <p class="text-gray-400 mt-3 max-w-md mx-auto text-sm">Join 5,000+ happy clients who found their perfect home through HG Estates.</p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center mt-7">
+      <a href="properties.html" class="btn-primary flex items-center justify-center gap-2 text-sm"><i class="bx bx-search"></i> Browse Properties</a>
+      <a href="contact.html" class="btn-outline-gold flex items-center justify-center gap-2 text-sm"><i class="bx bx-phone"></i> Talk to an Agent</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="pt-16 pb-8 px-6 md:px-12 border-t border-white/5">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+      <div>
+        <a href="index.html" class="font-sora text-xl font-bold flex items-center gap-2">
+          <span class="w-7 h-7 rounded-lg bg-emerald flex items-center justify-center text-dark-900 text-xs font-black">HG</span>
+          Estates
+        </a>
+        <p class="text-gray-400 text-sm mt-3 max-w-xs leading-relaxed">A futuristic real estate platform connecting people with properties of their dreams.</p>
+        <div class="flex gap-2 mt-4">
+          <a href="#" class="icon-btn"><i class="bx bxl-facebook text-sm"></i></a>
+          <a href="#" class="icon-btn"><i class="bx bxl-instagram text-sm"></i></a>
+          <a href="#" class="icon-btn"><i class="bx bxl-linkedin text-sm"></i></a>
+          <a href="#" class="icon-btn"><i class="bx bxl-twitter text-sm"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-sora font-semibold mb-4 text-xs uppercase tracking-wider">Quick Links</h4>
+        <ul class="space-y-2.5 text-sm text-gray-400">
+          <li><a href="index.html" class="hover:text-emerald transition-colors">Home</a></li>
+          <li><a href="properties.html" class="hover:text-emerald transition-colors">Properties</a></li>
+          <li><a href="agents.html" class="hover:text-emerald transition-colors">Agents</a></li>
+          <li><a href="about.html" class="hover:text-emerald transition-colors">About Us</a></li>
+          <li><a href="blog.html" class="hover:text-emerald transition-colors">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-sora font-semibold mb-4 text-xs uppercase tracking-wider">Categories</h4>
+        <ul class="space-y-2.5 text-sm text-gray-400">
+          <li><a href="properties.html?type=Apartment" class="hover:text-emerald transition-colors">Apartments</a></li>
+          <li><a href="properties.html?type=Villa" class="hover:text-emerald transition-colors">Villas</a></li>
+          <li><a href="properties.html?type=Commercial" class="hover:text-emerald transition-colors">Commercial</a></li>
+          <li><a href="properties.html?type=Office" class="hover:text-emerald transition-colors">Offices</a></li>
+          <li><a href="properties.html?type=House" class="hover:text-emerald transition-colors">Houses</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-sora font-semibold mb-4 text-xs uppercase tracking-wider">Newsletter</h4>
+        <p class="text-gray-400 text-sm mb-3 leading-relaxed">Get the latest listings and market news.</p>
+        <div class="flex gap-2">
+          <input type="email" placeholder="Your email" class="w-full bg-dark-700/50 border border-white/10 rounded-full px-4 py-2 text-sm outline-none focus:border-emerald transition-colors">
+          <button class="icon-btn !w-10 !h-10 flex-shrink-0 !bg-emerald/10 !border-emerald/30">
+            <i class="bx bx-send text-emerald text-sm"></i>
+          </button>
+        </div>
+        <p class="text-gray-600 text-xs mt-2">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+
+    <hr class="glow-divider">
+
+    <div class="pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-gray-500 text-xs">
+      <p>© 2026 HG Estates. All rights reserved.</p>
+      <div class="flex items-center gap-4">
+        <a href="#" class="hover:text-emerald transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-emerald transition-colors">Terms of Use</a>
+        <span>Built by <span class="text-emerald font-semibold">Hasnat Gujjar</span></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" class="fixed bottom-6 right-6 z-50 icon-btn !w-11 !h-11 !bg-emerald !border-emerald opacity-0 pointer-events-none transition-all duration-300">
+  <i class="bx bx-up-arrow-alt text-dark-900 text-lg"></i>
+</button>
+
+<!-- ============ SCRIPTS ============ -->
+<script src="data/properties-data.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/favorites.js"></script>
+<script src="assets/js/mortgage-calculator.js"></script>
+<script src="assets/js/dark-mode.js"></script>
+
+<script>
+$(function () {
+
+  // Hero bg zoom
+  setTimeout(() => $('#hero-bg').addClass('loaded'), 100);
+
+  // Particles
+  const wrap = document.getElementById('particles-wrap');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      background:rgba(0,245,160,${Math.random()*0.4+0.2});
+      animation-duration:${Math.random()*14+8}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    wrap.appendChild(p);
+  }
+
+  // Hero search redirect
+  $('#hero-search-btn').on('click', function () {
+    const loc    = $('#search-location').val();
+    const type   = $('#search-type').val();
+    const budget = $('#search-budget').val();
+    const beds   = $('#search-beds').val();
+    const params = new URLSearchParams();
+    if (loc)    params.set('location', loc);
+    if (type)   params.set('type', type);
+    if (budget) params.set('budget', budget);
+    if (beds)   params.set('beds', beds);
+    window.location.href = 'properties.html?' + params.toString();
+  });
+
+  // Mortgage extra fields
+  function updateCalcExtras() {
+    const price     = parseFloat($('#property-price').val()) || 0;
+    const down      = parseFloat($('#down-payment').val())   || 0;
+    const principal = Math.max(0, price - down);
+    const rate      = parseFloat($('#interest-rate').val()) / 100 / 12;
+    const months    = parseFloat($('#loan-duration').val()) * 12;
+    let monthly = 0;
+    if (rate === 0) { monthly = principal / months; }
+    else { const f = Math.pow(1+rate,months); monthly = principal*(rate*f)/(f-1); }
+    if (!isFinite(monthly) || monthly < 0) monthly = 0;
+    const totalPaid = monthly * months;
+    const totalInt  = Math.max(0, totalPaid - principal);
+    const fmt = n => '$' + Math.round(n).toLocaleString();
+    $('#calc-loan-amount').text(fmt(principal));
+    $('#calc-total-interest').text(fmt(totalInt));
+    $('#calc-total-cost').text(fmt(totalPaid));
+  }
+  $('#property-price,#down-payment,#interest-rate,#loan-duration').on('input', updateCalcExtras);
+  updateCalcExtras();
+
+  // Duration label
+  $('#loan-duration').on('input', function () {
+    $('#loan-duration-value').text($(this).val() + ' Years');
+  });
+
+  // Testimonial dots sync
+  const tCar = document.getElementById('testimonialCarousel');
+  if (tCar) {
+    tCar.addEventListener('slid.bs.carousel', function (e) {
+      $('.carousel-indicators-custom').removeClass('bg-emerald').addClass('bg-white/20');
+      $('.carousel-indicators-custom').eq(e.to).addClass('bg-emerald').removeClass('bg-white/20');
+    });
+  }
+
+  // Recently Viewed
+  if (typeof PROPERTIES_DATA !== 'undefined') {
+    const recent = JSON.parse(localStorage.getItem('hg_estates_recent') || '[]');
+    if (recent.length > 0) {
+      $('#recently-viewed-section').addClass('has-items');
+      const grid = $('#recently-viewed-grid');
+      recent.slice(0,3).forEach((id, i) => {
+        const p = PROPERTIES_DATA.find(x => x.id === parseInt(id));
+        if (!p) return;
+        const badge = p.purpose === 'sale'
+          ? 'bg-emerald text-dark-900'
+          : 'bg-gold text-dark-900';
+        const badgeText = p.purpose === 'sale' ? 'For Sale' : 'For Rent';
+        grid.append(`
+          <div class="property-card" data-aos="fade-up" data-aos-delay="${i*100}">
+            <div class="card-img-wrap relative" style="height:195px;">
+              <img src="${p.image}" class="w-full h-full object-cover" alt="${p.title}">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+              <span class="absolute top-3 left-3 ${badge} text-xs font-bold px-2.5 py-0.5 rounded-full z-10">${badgeText}</span>
+              <div class="absolute bottom-3 left-3 z-10"><p class="font-sora font-bold text-white text-base">${p.priceLabel}</p></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-sora font-semibold text-sm">${p.title}</h3>
+              <p class="text-gray-400 text-xs flex items-center gap-1 mt-1 mb-3"><i class="bx bx-map text-emerald"></i>${p.location}</p>
+              <div class="property-info-row">
+                <div class="property-info-item"><i class="bx bx-bed"></i><span class="info-value">${p.beds||'—'}</span><span class="info-label">Beds</span></div>
+                <div class="property-info-item"><i class="bx bx-bath"></i><span class="info-value">${p.baths}</span><span class="info-label">Baths</span></div>
+                <div class="property-info-item"><i class="bx bx-area"></i><span class="info-value">${p.area.toLocaleString()}</span><span class="info-label">Sqft</span></div>
+              </div>
+              <a href="property-details.html?id=${p.id}" class="btn-primary w-full text-center block mt-3 text-xs py-2">View Details</a>
+            </div>
+          </div>
+        `);
+      });
+      if (typeof AOS !== 'undefined') AOS.refreshHard();
+    }
+  }
+
+});
+</script>
+
+</body>
+</html> 
